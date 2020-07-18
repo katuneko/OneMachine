@@ -137,10 +137,10 @@ namespace OneMachine
             }
             /* 関数のとき */
             switch(item){
-                case "inc":
+                case "inc":/* 未使用 */
                     eRet = E_FUNC.Succ;
                     break;
-                case "dec":
+                case "dec":/* 未使用 */
                     eRet = E_FUNC.Decc;
                     break;
                 case "add":
@@ -158,13 +158,13 @@ namespace OneMachine
                 case "lt":
                     eRet = E_FUNC.Lt;
                     break;
-                case "mod":
+                case "mod":/* 未使用 */
                     eRet = E_FUNC.Mod;
                     break;
-                case "dem":
+                case "dem":/* 未使用 */
                     eRet = E_FUNC.Dem;
                     break;
-                case "send":
+                case "send":/* 未使用 */
                     eRet = E_FUNC.Send;
                     break;
                 case "neg":
@@ -188,7 +188,7 @@ namespace OneMachine
                 case "f":
                     eRet = E_FUNC.F;
                     break;
-                case "pwr2":
+                case "pwr2":/* 未使用 */
                     eRet = E_FUNC.Pow2;
                     break;
                 case "i":
@@ -209,22 +209,22 @@ namespace OneMachine
                 case "isnil":
                     eRet = E_FUNC.IsNil;
                     break;
-                case "vec":
+                case "vec":/* 未使用 */
                     eRet = E_FUNC.Vec;
                     break;
-                case "draw":
+                case "draw":/* 未使用 */
                     eRet = E_FUNC.Draw;
                     break;
-                case "checkerboard":
+                case "checkerboard":/* 未使用 */
                     eRet = E_FUNC.Checker;
                     break;
-                case "multipledraw":
+                case "multipledraw":/* 未使用 */
                     eRet = E_FUNC.MDraw;
                     break;
-                case "if0":
+                case "if0":/* 未使用 */
                     eRet = E_FUNC.IsZero;
                     break;
-                case "interact":
+                case "interact":/* 未使用 */
                     eRet = E_FUNC.Interact;
                     break;
                 case "default":
@@ -312,25 +312,6 @@ namespace OneMachine
             return (c) => C2(s1, c);
         }
         private string C(string src){
-            dynamic d = src.Split(new char[] { ' ' }, 2);
-            if(d.Length == 1){
-                return "c " + src;
-            }
-            string str1 = Exec[(int)FuncSel(d[0])].iFunc(d[1]);
-
-            d = src.Split(new char[] { ' ' }, 2);
-            if(d.Length == 1){
-                return "c " + src;
-            }
-            string str2 = Exec[(int)FuncSel(d[0])].iFunc(d[1]);
-
-            d = src.Split(new char[] { ' ' }, 2);
-            if (d.Length != 1)
-            {
-                string str3 = Exec[(int)FuncSel(d[0])].iFunc(d[1]);
-            }
-            
-
             return src;
         }
         private string B(string src){
