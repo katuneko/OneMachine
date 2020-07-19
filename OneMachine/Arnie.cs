@@ -14,7 +14,7 @@ namespace OneMachine
         StreamReader _streamReader;
 
         /* 命令処理の配列 */
-        private delegate string iFunction(string src);
+        private delegate string iFunction(ref string src);
         private struct iArray
         {
             public iFunction iFunc;
@@ -252,121 +252,256 @@ namespace OneMachine
             if(d.Length == 1){
                 return src;
             }
-            return Exec[(int)FuncSel(d[0])].iFunc(d[1]);
+            src = d[1];
+            return Exec[(int)FuncSel(d[0])].iFunc(ref src);
         }
-        private string Nop(string src)
+        private string Nop(ref string src)
         {
             return src;
         }
-        private string Ap(string src)
+        private string Ap(ref string src)
         {
             return execOnce(src);
         }
-        private string Succ(string src){
-            
+        private string Succ(ref string src){
+            string s1 = getarg(ref src);
+            try
+            {
+               int i = Int32.Parse(s1); 
+               i++;
+               s1 = i.ToString();
+            }
+            catch
+            {
+                Console.WriteLine("Succ Parse Error.");
+            }
+            return s1;
+        }
+        private string Decc(ref string src){
+            string s1 = getarg(ref src);
+            try
+            {
+               int i = Int32.Parse(s1); 
+               i--;
+               s1 = i.ToString();
+            }
+            catch
+            {
+                Console.WriteLine("Decc Parse Error.");
+            }
+            return s1;
+        }
+        private string Sum(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            try
+            {
+               int i1 = Int32.Parse(s1); 
+               int i2 = Int32.Parse(s2); 
+
+               s1 = (i1 + i2).ToString();
+            }
+            catch
+            {
+                Console.WriteLine("Sum Parse Error.");
+            }
+            return s1;
+        }
+        private string Prod(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            try
+            {
+               int i1 = Int32.Parse(s1); 
+               int i2 = Int32.Parse(s2); 
+
+               s1 = (i1 * i2).ToString();
+            }
+            catch
+            {
+                Console.WriteLine("Prod Parse Error.");
+            }
+            return s1;
+        }
+        private string Div(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            try
+            {
+               int i1 = Int32.Parse(s1); 
+               int i2 = Int32.Parse(s2); 
+
+               s1 = (i1 / i2).ToString();
+            }
+            catch
+            {
+                Console.WriteLine("Div Parse Error.");
+            }
+            return s1;
+        }
+        private string Eq(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+
+            return (s1 == s2) ? "t" : "f";
+        }
+        private string Lt(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            int i1, i2;
+            try
+            {
+               i1 = Int32.Parse(s1); 
+               i2 = Int32.Parse(s2); 
+            }
+            catch
+            {
+                Console.WriteLine("Lt Parse Error.");
+                return "t";
+            }
+            return (i1 < i2) ? "t" : "f";
+        }
+        private string Mod(ref string src){
             return src;
         }
-        private string Decc(string src){
+        private string Dem(ref string src){
             return src;
         }
-        private string Sum(string src){
+        private string Send(ref string src){
             return src;
         }
-        private string Prod(string src){
+        private string Neg(ref string src){
+            string s1 = getarg(ref src);
+            try
+            {
+               int i1 = Int32.Parse(s1); 
+               s1 = (-i1).ToString();
+            }
+            catch
+            {
+                Console.WriteLine("Div Parse Error.");
+            }
+            return s1;
+        }
+        private string S(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            string s3 = getarg(ref src);            
+            return "ap ap " + s1 + " " + s3 + " ap " + s2 + " " + s3;
+        }
+        private string C(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            string s3 = getarg(ref src);
+            return "ap ap " + s1 + " " + s3 + " " +s2;
+        }
+        private string B(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            string s3 = getarg(ref src);
+            return"ap " + s1 + " ap " + s2 + " " + s3;
+        }
+        private string T(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            return s1;
+        }
+        private string F(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            return s2;
+        }
+        private string Pow2(ref string src){
             return src;
         }
-        private string Div(string src){
+        private string I(ref string src){
+            string s1 = getarg(ref src);
+            return s1;
+        }
+        private string Cons(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            string s3 = getarg(ref src);
+            return "ap ap " + s3 + " " + s1 + " " + s2;
+        }
+        private string Car(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            string s3 = getarg(ref src);
+            if(s2 == ""){
+                s2 = s1;
+            }
+            if(s3 == ""){
+                return s2 + " t";
+            }
+            return s2;
+        }
+        private string Cdr(ref string src){
+            string s1 = getarg(ref src);
+            string s2 = getarg(ref src);
+            string s3 = getarg(ref src);
+            if(s2 == ""){
+                s2 = s1;
+            }
+            if(s3 == ""){
+                return s2 + " f";
+            }
+            return s3;
+        }
+        private string Nil(ref string src){
+            string s1 = getarg(ref src);
+            return "t";
+        }
+        private string IsNil(ref string src){
+            string s1 = getarg(ref src);
+            return (s1 == "nil") ? "t" : "f";
+        }
+        private string Lst(ref string src){
             return src;
         }
-        private string Eq(string src){
+        private string Vec(ref string src){
+            return Cons(ref src);
+        }
+        private string Draw(ref string src){
             return src;
         }
-        private string Lt(string src){
+        private string Checker(ref string src){
             return src;
         }
-        private string Mod(string src){
+        private string MDraw(ref string src){
             return src;
         }
-        private string Dem(string src){
+        private string MList(ref string src){
             return src;
         }
-        private string Send(string src){
+        private string IsZero(ref string src){
             return src;
         }
-        private string Neg(string src){
+        private string Interact(ref string src){
             return src;
         }
-        private string S(string src){
-            return src;
-        }
-        private string C3(string s1, string s2, string s3)
-        {
-            return s1 + s3 + s2;
-        }
-        private Func<string,string> C2(string s1, string s2)
-        {
-            return (c) => C3(s1, s2, c);
-        }
-        private Func<string, Func<string, string>> C1(string s1)
-        {
-            return (c) => C2(s1, c);
-        }
-        private string C(string src){
-            return src;
-        }
-        private string B(string src){
-            return src;
-        }
-        private string T(string src){
-            return src;
-        }
-        private string F(string src){
-            return src;
-        }
-        private string Pow2(string src){
-            return src;
-        }
-        private string I(string src){
-            return src;
-        }
-        private string Cons(string src){
-            return src;
-        }
-        private string Car(string src){
-            return src;
-        }
-        private string Cdr(string src){
-            return src;
-        }
-        private string Nil(string src){
-            return src;
-        }
-        private string IsNil(string src){
-            return src;
-        }
-        private string Lst(string src){
-            return src;
-        }
-        private string Vec(string src){
-            return src;
-        }
-        private string Draw(string src){
-            return src;
-        }
-        private string Checker(string src){
-            return src;
-        }
-        private string MDraw(string src){
-            return src;
-        }
-        private string MList(string src){
-            return src;
-        }
-        private string IsZero(string src){
-            return src;
-        }
-        private string Interact(string src){
-            return src;
+        private string getarg(ref string src){
+            if (src == "")
+            {
+                return src;
+            }
+
+            dynamic d = src.Split(new char[] { ' ' }, 2);
+            while(isNamed(d[0])){
+                d[0] = _code[d[0]];
+                if(2 == d.Length)
+                {
+                    d[0] = d[0] + d[1];
+                }
+                d = d[0].Split(new char[] { ' ' }, 2);
+            }
+            if(d.Length == 1){
+                return src;
+            }else{
+                src = d[1];
+            }
+            E_FUNC eFunc = FuncSel(d[0]);
+            return (eFunc != E_FUNC.Ap) ? d[0] : Exec[(int)eFunc].iFunc(ref src);
         }
         public void import(string filepath)
         {
